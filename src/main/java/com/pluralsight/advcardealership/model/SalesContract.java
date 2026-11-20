@@ -64,9 +64,9 @@ public class SalesContract extends Contract{
     public BigDecimal getMonthlyPayment() {
         if (isFinanced) {
             if (getVehicleSold().getPrice().compareTo(new BigDecimal("10000.00")) < 0) {
-                calculateMonthlyPayment(new BigDecimal(0), new BigDecimal(".0525"), 24);
+                calculateMonthlyPayment(getVehicleSold().getPrice(), new BigDecimal(".0525"), 24);
             } else {
-                calculateMonthlyPayment(new BigDecimal(0), new BigDecimal(".0425"), 48);
+                calculateMonthlyPayment(getVehicleSold().getPrice(), new BigDecimal(".0425"), 48);
             }
         } else {
             return new BigDecimal("0.00");
