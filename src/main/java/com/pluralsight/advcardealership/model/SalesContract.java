@@ -1,6 +1,7 @@
 package com.pluralsight.advcardealership.model;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 
 public class SalesContract extends Contract{
@@ -10,6 +11,8 @@ public class SalesContract extends Contract{
     private final BigDecimal VALUE_THRESHOLD = new BigDecimal("10000");
     private final BigDecimal HIGH_VALUE_PERCENT = new BigDecimal(".0425");
     private final BigDecimal LOW_VALUE_PERCENT = new BigDecimal(".0525");
+    private final BigDecimal HIGH_VALUE_PROCESSING_FEE = new BigDecimal("495.00");
+    private final BigDecimal LOW_VALUE_PROCESSING_FEE = new BigDecimal("295.00");
     private final int HIGH_VALUE_TERM = 48;
     private final int LOW_VALUE_TERM = 24;
     private boolean isFinanced;
@@ -28,10 +31,10 @@ public class SalesContract extends Contract{
     }
 
     public BigDecimal getProcessingFee() {
-        if (getVehicleSold().getPrice().compareTo(VALUE_THRESHOLD) <= 0) {
-            return new BigDecimal("295.00");
+        if (getVehicleSold().getPrice().compareTo(VALUE_THRESHOLD) < 0) {
+            return LOW_VALUE_PROCESSING_FEE;
         } else {
-            return new BigDecimal("495.00");
+            return HIGH_VALUE_PROCESSING_FEE;
         }
     }
 
@@ -49,7 +52,7 @@ public class SalesContract extends Contract{
 
     @Override
     public BigDecimal getTotalPrice() {
-        return (getVehicleSold().getPrice().multiply(SALES_TAX)).add(getRECORDING_FEE()).add(getProcessingFee());
+        return (getVehicleSold().getPrice().multiply(SALES_TAX.add(BigDecimal.ONE))).add(getRECORDING_FEE()).add(getProcessingFee()).setScale(2, RoundingMode.HALF_UP);
     }
 
     @Override
