@@ -18,4 +18,12 @@ class LeaseContractTest {
         assertEquals(expectedTotalPrice, leaseContract.getTotalPrice());
     }
 
+    @Test
+    public void getMonthlyPayment_should_returnExpectedMonthlyPayment() {
+        Vehicle lease = new Vehicle(2, 2, "A", "a", "AA", "a", 1, new BigDecimal("31995.00"));
+        Contract leaseContract = new LeaseContract(LocalDate.now(), "A", "a", lease);
+        BigDecimal expectedMonthlyPayment = new BigDecimal("538.43");
+
+        assertEquals(expectedMonthlyPayment, leaseContract.getMonthlyPayment());
+    }
 }

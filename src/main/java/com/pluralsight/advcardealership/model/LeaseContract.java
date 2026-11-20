@@ -7,7 +7,7 @@ import java.time.LocalDate;
 public class LeaseContract extends Contract {
     private final BigDecimal END_VALUE_MODIFIER = new BigDecimal(".50");
     private final BigDecimal LEASING_FEE = new BigDecimal(".07");
-    private final BigDecimal LEASING_PERCENT = new BigDecimal(".04");
+    private final BigDecimal LEASING_PERCENT = new BigDecimal("4.00");
     private BigDecimal expectedEndValue;
     private BigDecimal leaseFee;
     private final int LEASING_TERM = 36;

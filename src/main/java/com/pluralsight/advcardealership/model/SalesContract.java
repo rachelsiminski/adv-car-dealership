@@ -9,8 +9,8 @@ public class SalesContract extends Contract{
     private final BigDecimal SALES_TAX = new BigDecimal(".05");
     private final BigDecimal RECORDING_FEE = new BigDecimal("100");
     private final BigDecimal VALUE_THRESHOLD = new BigDecimal("10000");
-    private final BigDecimal HIGH_VALUE_PERCENT = new BigDecimal(".0425");
-    private final BigDecimal LOW_VALUE_PERCENT = new BigDecimal(".0525");
+    private final BigDecimal HIGH_VALUE_PERCENT = new BigDecimal("4.25");
+    private final BigDecimal LOW_VALUE_PERCENT = new BigDecimal("5.25");
     private final BigDecimal HIGH_VALUE_PROCESSING_FEE = new BigDecimal("495.00");
     private final BigDecimal LOW_VALUE_PROCESSING_FEE = new BigDecimal("295.00");
     private final int HIGH_VALUE_TERM = 48;
