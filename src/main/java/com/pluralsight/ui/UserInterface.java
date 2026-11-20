@@ -1,0 +1,261 @@
+package com.pluralsight.ui;
+
+import com.pluralsight.data.DealershipFileManager;
+import com.pluralsight.model.Dealership;
+import com.pluralsight.model.Vehicle;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class UserInterface {
+    private DealershipFileManager dealershipFileManager;
+    private Dealership dealership;
+    private final Scanner scanner = new Scanner(System.in);
+
+    private void init() {
+        dealershipFileManager = new DealershipFileManager();
+        this.dealership = dealershipFileManager.getDealership();
+    }
+
+    public UserInterface() {
+
+    }
+
+    public void display() {
+        init();
+
+        System.out.println(" - Welcome to the " + dealership.getName() + " Inventory Management System -");
+        System.out.println();
+        System.out.println("Dealership Information: ");
+        System.out.println(dealership.getAddress() + " " + dealership.getPhone());
+        System.out.println();
+        while (true) {
+            System.out.println("""
+                    \t[1] Find Vehicles by Price
+                    \t[2] Find Vehicles by Make/Model
+                    \t[3] Find Vehicles by Year
+                    \t[4] Find Vehicles by Color
+                    \t[5] Find Vehicles by Mileage
+                    \t[6] Find Vehicles by Type
+                    \t[7] Find All Vehicles
+                    \t[8] Add Vehicle
+                    \t[9] Remove Vehicle
+                    \t[0] Exit""");
+            System.out.println();
+
+            int choice = promptForInt("Enter your selection: ");
+
+            switch (choice) {
+                case 1 -> processGetByPriceRequest();
+                case 2 -> processGetByMakeModelRequest();
+                case 3 -> processGetByYearRequest();
+                case 4 -> processGetByColorRequest();
+                case 5 -> processGetByMileageRequest();
+                case 6 -> processGetByVehicleTypeRequest();
+                case 7 -> processGetAllVehiclesRequest();
+                case 8 -> processAddVehicleRequest();
+                case 9 -> processRemoveVehicleRequest();
+                case 0 -> {
+                    System.out.println("Goodbye! Thank you for using the inventory management system!");
+                    System.exit(0);
+                }
+            }
+        }
+
+    }
+
+    public void displayBanner() {
+        System.out.println("""
+                __/\\\\\\\\\\\\\\\\\\\\\\\\___________________________________/\\\\\\\\\\\\_______________________________________________/\\\\\\_____________________________       \s
+                 _\\/\\\\\\////////\\\\\\________________________________\\////\\\\\\______________________________________________\\/\\\\\\_____________________________      \s
+                  _\\/\\\\\\______\\//\\\\\\__________________________________\\/\\\\\\______________________________________________\\/\\\\\\__________/\\\\\\___/\\\\\\\\\\\\\\\\\\__     \s
+                   _\\/\\\\\\_______\\/\\\\\\_____/\\\\\\\\\\\\\\\\___/\\\\\\\\\\\\\\\\\\_______\\/\\\\\\________/\\\\\\\\\\\\\\\\___/\\\\/\\\\\\\\\\\\\\___/\\\\\\\\\\\\\\\\\\\\_\\/\\\\\\_________\\///___/\\\\\\/////\\\\\\_    \s
+                    _\\/\\\\\\_______\\/\\\\\\___/\\\\\\/////\\\\\\_\\////////\\\\\\______\\/\\\\\\______/\\\\\\/////\\\\\\_\\/\\\\\\/////\\\\\\_\\/\\\\\\//////__\\/\\\\\\\\\\\\\\\\\\\\___/\\\\\\_\\/\\\\\\\\\\\\\\\\\\\\__   \s
+                     _\\/\\\\\\_______\\/\\\\\\__/\\\\\\\\\\\\\\\\\\\\\\____/\\\\\\\\\\\\\\\\\\\\_____\\/\\\\\\_____/\\\\\\\\\\\\\\\\\\\\\\__\\/\\\\\\___\\///__\\/\\\\\\\\\\\\\\\\\\\\_\\/\\\\\\/////\\\\\\_\\/\\\\\\_\\/\\\\\\//////___  \s
+                      _\\/\\\\\\_______/\\\\\\__\\//\\\\///////____/\\\\\\/////\\\\\\_____\\/\\\\\\____\\//\\\\///////___\\/\\\\\\_________\\////////\\\\\\_\\/\\\\\\___\\/\\\\\\_\\/\\\\\\_\\/\\\\\\_________ \s
+                       _\\/\\\\\\\\\\\\\\\\\\\\\\\\/____\\//\\\\\\\\\\\\\\\\\\\\_\\//\\\\\\\\\\\\\\\\/\\\\__/\\\\\\\\\\\\\\\\\\__\\//\\\\\\\\\\\\\\\\\\\\_\\/\\\\\\__________/\\\\\\\\\\\\\\\\\\\\_\\/\\\\\\___\\/\\\\\\_\\/\\\\\\_\\/\\\\\\_________\s
+                        _\\////////////_______\\//////////___\\////////\\//__\\/////////____\\//////////__\\///__________\\//////////__\\///____\\///__\\///__\\///__________
+                
+                \t\t\t\t __     __   __     __   __   ______     __   __     ______   ______     ______     __  __                       \s
+                \t\t\t\t/\\ \\   /\\ "-.\\ \\   /\\ \\ / /  /\\  ___\\   /\\ "-.\\ \\   /\\__  _\\ /\\  __ \\   /\\  == \\   /\\ \\_\\ \\                      \s
+                \t\t\t\t\\ \\ \\  \\ \\ \\-.  \\  \\ \\ \\'/   \\ \\  __\\   \\ \\ \\-.  \\  \\/_/\\ \\/ \\ \\ \\/\\ \\  \\ \\  __<   \\ \\____ \\                     \s
+                \t\t\t\t \\ \\_\\  \\ \\_\\\\"\\_\\  \\ \\__|    \\ \\_____\\  \\ \\_\\\\"\\_\\    \\ \\_\\  \\ \\_____\\  \\ \\_\\ \\_\\  \\/\\_____\\                    \s
+                \t\t\t\t  \\/_/   \\/_/ \\/_/   \\/_/      \\/_____/   \\/_/ \\/_/     \\/_/   \\/_____/   \\/_/ /_/   \\/_____/                    \s
+                
+                \t\t\t\t\t\t __    __     ______     __   __     ______     ______     ______     __    __     ______     __   __     ______ \s
+                \t\t\t\t\t\t/\\ "-./  \\   /\\  __ \\   /\\ "-.\\ \\   /\\  __ \\   /\\  ___\\   /\\  ___\\   /\\ "-./  \\   /\\  ___\\   /\\ "-.\\ \\   /\\__  _\\\s
+                \t\t\t\t\t\t\\ \\ \\-./\\ \\  \\ \\  __ \\  \\ \\ \\-.  \\  \\ \\  __ \\  \\ \\ \\__ \\  \\ \\  __\\   \\ \\ \\-./\\ \\  \\ \\  __\\   \\ \\ \\-.  \\  \\/_/\\ \\/\s
+                \t\t\t\t\t\t \\ \\_\\ \\ \\_\\  \\ \\_\\ \\_\\  \\ \\_\\\\"\\_\\  \\ \\_\\ \\_\\  \\ \\_____\\  \\ \\_____\\  \\ \\_\\ \\ \\_\\  \\ \\_____\\  \\ \\_\\\\"\\_\\    \\ \\_\\\s
+                \t\t\t\t\t\t  \\/_/  \\/_/   \\/_/\\/_/   \\/_/ \\/_/   \\/_/\\/_/   \\/_____/   \\/_____/   \\/_/  \\/_/   \\/_____/   \\/_/ \\/_/     \\/_/\s
+                
+                \t\t\t\t\t\t\t\t ______     ______     ______   ______   __     __     ______     ______     ______                              \s
+                \t\t\t\t\t\t\t\t/\\  ___\\   /\\  __ \\   /\\  ___\\ /\\__  _\\ /\\ \\  _ \\ \\   /\\  __ \\   /\\  == \\   /\\  ___\\                             \s
+                \t\t\t\t\t\t\t\t\\ \\___  \\  \\ \\ \\/\\ \\  \\ \\  __\\ \\/_/\\ \\/ \\ \\ \\/ ".\\ \\  \\ \\  __ \\  \\ \\  __<   \\ \\  __\\                             \s
+                \t\t\t\t\t\t\t\t \\/\\_____\\  \\ \\_____\\  \\ \\_\\      \\ \\_\\  \\ \\__/".~\\_\\  \\ \\_\\ \\_\\  \\ \\_\\ \\_\\  \\ \\_____\\                           \s
+                \t\t\t\t\t\t\t\t  \\/_____/   \\/_____/   \\/_/       \\/_/   \\/_/   \\/_/   \\/_/\\/_/   \\/_/ /_/   \\/_____/                           \s
+                
+                """);
+    }
+
+    private void displayVehicles(ArrayList<Vehicle> inventory) {
+        if (!inventory.isEmpty()) {
+            System.out.println();
+            System.out.println( "-------------------------------------------------------------------------------------------------------" );
+            System.out.printf("|%s|%s|%s|%s|%s|%s|%s| $%s|%n", center("VIN", 10),
+                    center("YEAR", 10),
+                    center("MAKE", 12),
+                    center("MODEL", 12),
+                    center("TYPE", 12),
+                    center("COLOR", 12),
+                    center("MILEAGE", 12),
+                    center("PRICE", 12));
+            System.out.println();
+
+            for (Vehicle vehicle : inventory) {
+                System.out.printf("|%s|%s|%s|%s|%s|%s|%s| $%s|%n",
+                        center(Integer.toString(vehicle.getVin()), 10),
+                        center(Integer.toString(vehicle.getYear()), 10),
+                        center(vehicle.getMake(), 12),
+                        center(vehicle.getModel(), 12),
+                        center(vehicle.getVehicleType(), 12),
+                        center(vehicle.getColor(), 12),
+                        center(Integer.toString(vehicle.getOdometer()), 12),
+                        center(vehicle.getPrice().toString(), 12));
+            }
+        } else {
+            System.out.println("No vehicles found matching this request.");
+        }
+
+        pressEnterToContinue();
+
+    }
+
+    private static String center(String text, int width) {
+        int leftover = width - text.length();
+        if (leftover <= 0) {
+            return text;
+        }
+        int left = leftover / 2;
+        int right = leftover - left;
+        return " ".repeat(left) + text + " ".repeat(right);
+    }
+
+    public void processGetByPriceRequest() {
+        displayVehicles(dealership.getVehiclesByPrice(promptForString("Enter the minimum price: "), promptForString("Enter the maximum price: ")));
+    }
+
+    public void processGetByMakeModelRequest() {
+        displayVehicles(dealership.getVehiclesByMakeModel(promptForString("Enter the make: "), promptForString("Enter the model: ")));
+    }
+
+    public void processGetByYearRequest() {
+        displayVehicles(dealership.getVehiclesByYear(promptForInt("Enter the minimum year: "), promptForInt("Enter the maximum year: ")));
+    }
+
+    public void processGetByColorRequest() {
+        displayVehicles(dealership.getVehiclesByColor(promptForString("Enter the color: ")));
+    }
+
+    public void processGetByMileageRequest() {
+        displayVehicles(dealership.getVehiclesByMileage(promptForInt("Enter the minimum miles: "), promptForInt("Enter the maximum miles: ")));
+    }
+
+    public void processGetByVehicleTypeRequest() {
+        displayVehicles(dealership.getVehiclesByType(promptForString("Enter the vehicle type: ")));
+    }
+
+    public void processGetAllVehiclesRequest() {
+        displayVehicles(dealership.getAllVehicles());
+    }
+
+    public void processAddVehicleRequest() {
+        dealership.addVehicle(collectVehicleInformation());
+        dealershipFileManager.saveDealership(dealership);
+    }
+
+    public void processRemoveVehicleRequest() {
+        int tempVin = promptForInt("Enter the VIN: ");
+        ArrayList<Vehicle> toRemove = new ArrayList<>();
+        for (Vehicle vehicle : dealership.getInventory()) {
+            if (vehicle.getVin() == tempVin) {
+                toRemove.add(vehicle);
+            }
+        }
+
+        if (!toRemove.isEmpty()) {
+            displayVehicles(toRemove);
+            dealership.removeVehicle(toRemove.get(0));
+        } else {
+            System.out.println("No Vehicles to Remove");
+        }
+        dealershipFileManager.saveDealership(dealership);
+    }
+
+    public Vehicle collectVehicleInformation() {
+        int vin = promptForInt("Enter the Vehicle Identification Number (VIN): ");
+        System.out.println();
+        int year = promptForInt("Enter the Year: ");
+        System.out.println();
+        String make = promptForString("Enter the Make: ");
+        System.out.println();
+        String model = promptForString("Enter the Model: ");
+        System.out.println();
+        String type = promptForString("Enter the Vehicle Type: ");
+        System.out.println();
+        String color = promptForString("Enter the Color: ");
+        System.out.println();
+        int mileage = promptForInt("Enter the Odometer Reading: ");
+        System.out.println();
+        String price = promptForString("Enter the Price: ");
+        System.out.println();
+
+        return new Vehicle(vin, year, make, model, type, color, mileage, new BigDecimal(price).setScale(2));
+    }
+
+    public String promptForString(String prompt) {
+        System.out.print(prompt);
+        String string;
+
+        while (true) {
+            string = scanner.nextLine().trim();
+            if (string.isEmpty()) {
+                System.out.println("Input not recorded, please try again!");
+                continue;
+            }
+            if (string.contains("|")) {
+                System.out.println("Please do not use '|', try again.");
+                continue;
+            }
+            return string;
+        }
+    }
+
+    public int promptForInt(String prompt) {
+        System.out.println(prompt);
+        String number;
+
+        while (true) {
+            number = scanner.nextLine();
+            if (number.isEmpty()) {
+                System.out.println("Number not recorded, please try again!");
+                continue;
+            }
+            if (number.contains("|")) {
+                System.out.println("Please do not use '|', try again.");
+                continue;
+            }
+            try {
+                return Integer.parseInt(number);
+            } catch (NumberFormatException e) {
+                System.out.println("Unable to parse number, try again");
+            }
+        }
+    }
+
+    private void pressEnterToContinue() {
+        System.out.println();
+        System.out.println("Press enter to return to the menu...");
+        scanner.nextLine();
+    }
+}
