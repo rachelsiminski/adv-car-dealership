@@ -9,10 +9,8 @@ public class LeaseContract extends Contract {
     private BigDecimal expectedEndValue;
     private BigDecimal leaseFee;
 
-    public LeaseContract(LocalDate dateOfContract, String customerName, String customerEmail, Vehicle vehicleSold, BigDecimal expectedEndValue, BigDecimal leaseFee) {
+    public LeaseContract(LocalDate dateOfContract, String customerName, String customerEmail, Vehicle vehicleSold) {
         super(dateOfContract, customerName, customerEmail, vehicleSold);
-        this.expectedEndValue = expectedEndValue;
-        this.leaseFee = leaseFee;
     }
 
     public BigDecimal getExpectedEndValue() {
