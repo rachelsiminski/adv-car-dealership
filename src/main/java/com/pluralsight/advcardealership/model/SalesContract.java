@@ -1,15 +1,16 @@
 package com.pluralsight.advcardealership.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class SalesContract extends Contract{
-    private BigDecimal salesTax;
-    private BigDecimal recordingFee;
+    private BigDecimal salesTax = new BigDecimal(".05");
+    private BigDecimal recordingFee = new BigDecimal("100.00");
     private BigDecimal processingFee;
     private boolean isFinanced;
 
-    public SalesContract(String dateOfContract, String customerName, String customerEmail, Vehicle vehicleSold, BigDecimal totalPrice, BigDecimal monthlyPayment, BigDecimal salesTax, BigDecimal recordingFee, BigDecimal processingFee, boolean isFinanced) {
-        super(dateOfContract, customerName, customerEmail, vehicleSold, totalPrice, monthlyPayment);
+    public SalesContract(LocalDate dateOfContract, String customerName, String customerEmail, Vehicle vehicleSold, BigDecimal salesTax, BigDecimal recordingFee, BigDecimal processingFee, boolean isFinanced) {
+        super(dateOfContract, customerName, customerEmail, vehicleSold);
         this.salesTax = salesTax;
         this.recordingFee = recordingFee;
         this.processingFee = processingFee;
