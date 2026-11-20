@@ -3,8 +3,6 @@ package com.pluralsight.advcardealership.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import static com.pluralsight.advcardealership.model.LoanCalculator.calculateMonthlyPayment;
-
 public class LeaseContract extends Contract {
     private BigDecimal expectedEndValue;
     private BigDecimal leaseFee;
@@ -36,6 +34,6 @@ public class LeaseContract extends Contract {
 
     @Override
     public BigDecimal getMonthlyPayment() {
-        return calculateMonthlyPayment(getVehicleSold().getPrice(), new BigDecimal(".04"), 36);
+        return LoanCalculator.calculateMonthlyPayment(getVehicleSold().getPrice(), new BigDecimal(".04"), 36);
     }
 }

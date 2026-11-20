@@ -3,12 +3,15 @@ package com.pluralsight.advcardealership.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import static com.pluralsight.advcardealership.model.LoanCalculator.calculateMonthlyPayment;
-
 public class SalesContract extends Contract{
-    private BigDecimal salesTax = new BigDecimal(".05");
-    private BigDecimal recordingFee = new BigDecimal("100.00");
     private BigDecimal processingFee;
+    private final BigDecimal SALES_TAX = new BigDecimal(".05");
+    private final BigDecimal RECORDING_FEE = new BigDecimal("100");
+    private final BigDecimal VALUE_THRESHOLD = new BigDecimal("10000");
+    private final BigDecimal HIGH_VALUE_PERCENT = new BigDecimal(".0425");
+    private final BigDecimal LOW_VALUE_PERCENT = new BigDecimal(".0525");
+    private final int HIGH_VALUE_TERM = 48;
+    private final int LOW_VALUE_TERM = 24;
     private boolean isFinanced;
 
     public SalesContract(LocalDate dateOfContract, String customerName, String customerEmail, Vehicle vehicleSold, boolean isFinanced) {
@@ -16,24 +19,16 @@ public class SalesContract extends Contract{
         this.isFinanced = isFinanced;
     }
 
-    public BigDecimal getSalesTax() {
-        return salesTax;
+    public BigDecimal getSALES_TAX() {
+        return SALES_TAX;
     }
 
-    public void setSalesTax(BigDecimal salesTax) {
-        this.salesTax = salesTax;
-    }
-
-    public BigDecimal getRecordingFee() {
-        return recordingFee;
-    }
-
-    public void setRecordingFee(BigDecimal recordingFee) {
-        this.recordingFee = recordingFee;
+    public BigDecimal getRECORDING_FEE() {
+        return RECORDING_FEE;
     }
 
     public BigDecimal getProcessingFee() {
-        if (getVehicleSold().getPrice().compareTo(new BigDecimal("10000.00")) <= 0) {
+        if (getVehicleSold().getPrice().compareTo(VALUE_THRESHOLD) <= 0) {
             return new BigDecimal("295.00");
         } else {
             return new BigDecimal("495.00");
@@ -54,17 +49,16 @@ public class SalesContract extends Contract{
 
     @Override
     public BigDecimal getTotalPrice() {
-        return (getVehicleSold().getPrice().multiply(salesTax)).add(getRecordingFee()).add(getProcessingFee());
+        return (getVehicleSold().getPrice().multiply(SALES_TAX)).add(getRECORDING_FEE()).add(getProcessingFee());
     }
 
     @Override
     public BigDecimal getMonthlyPayment() {
-        BigDecimal monthly;
         if (isFinanced) {
-            if (getVehicleSold().getPrice().compareTo(new BigDecimal("10000.00")) < 0) {
-                return calculateMonthlyPayment(getVehicleSold().getPrice(), new BigDecimal(".0525"), 24);
+            if (getVehicleSold().getPrice().compareTo(VALUE_THRESHOLD) < 0) {
+                return LoanCalculator.calculateMonthlyPayment(getVehicleSold().getPrice(), LOW_VALUE_PERCENT, LOW_VALUE_TERM);
             } else {
-                return calculateMonthlyPayment(getVehicleSold().getPrice(), new BigDecimal(".0425"), 48);
+                return LoanCalculator.calculateMonthlyPayment(getVehicleSold().getPrice(), HIGH_VALUE_PERCENT, HIGH_VALUE_TERM);
             }
         } else {
             return BigDecimal.ZERO;
