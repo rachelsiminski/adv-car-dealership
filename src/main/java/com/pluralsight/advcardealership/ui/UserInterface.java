@@ -1,8 +1,8 @@
-package com.pluralsight.ui;
+package com.pluralsight.advcardealership.ui;
 
-import com.pluralsight.data.DealershipFileManager;
-import com.pluralsight.model.Dealership;
-import com.pluralsight.model.Vehicle;
+import com.pluralsight.advcardealership.data.DealershipFileManager;
+import com.pluralsight.advcardealership.model.Dealership;
+import com.pluralsight.advcardealership.model.Vehicle;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

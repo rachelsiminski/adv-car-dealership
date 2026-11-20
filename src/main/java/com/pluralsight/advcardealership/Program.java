@@ -1,6 +1,6 @@
-package com.pluralsight;
+package com.pluralsight.advcardealership;
 
-import com.pluralsight.ui.UserInterface;
+import com.pluralsight.advcardealership.ui.UserInterface;
 
 public class Program {
     public static void main(String[] args) {

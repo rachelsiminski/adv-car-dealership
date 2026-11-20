@@ -1,7 +1,7 @@
-package com.pluralsight.data;
+package com.pluralsight.advcardealership.data;
 
-import com.pluralsight.model.Dealership;
-import com.pluralsight.model.Vehicle;
+import com.pluralsight.advcardealership.model.Dealership;
+import com.pluralsight.advcardealership.model.Vehicle;
 
 import java.io.*;
 import java.math.BigDecimal;

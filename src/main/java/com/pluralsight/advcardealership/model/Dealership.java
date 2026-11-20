@@ -1,4 +1,4 @@
-package com.pluralsight.model;
+package com.pluralsight.advcardealership.model;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
