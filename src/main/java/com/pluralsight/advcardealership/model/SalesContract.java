@@ -1,8 +1,9 @@
 package com.pluralsight.advcardealership.model;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
+
+import static com.pluralsight.advcardealership.model.LoanCalculator.calculateMonthlyPayment;
 
 public class SalesContract extends Contract{
     private BigDecimal salesTax = new BigDecimal(".05");
@@ -71,14 +72,5 @@ public class SalesContract extends Contract{
             return new BigDecimal("0.00");
         }
         return null;
-    }
-
-    public static BigDecimal calculateMonthlyPayment(BigDecimal amount, BigDecimal yearlyRatePercent, int months) {
-        BigDecimal monthlyRate = yearlyRatePercent.divide(new BigDecimal("1200"), 20, RoundingMode.HALF_UP);
-        BigDecimal growth = BigDecimal.ONE.add(monthlyRate).pow(months);
-
-        return amount.multiply(monthlyRate)
-                .multiply(growth)
-                .divide(growth.subtract(BigDecimal.ONE), 2, RoundingMode.HALF_UP);
     }
 }
