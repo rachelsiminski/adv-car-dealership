@@ -34,7 +34,11 @@ public class SalesContract extends Contract{
     }
 
     public BigDecimal getProcessingFee() {
-        return processingFee;
+        if (getVehicleSold().getPrice().compareTo(new BigDecimal("10000.00")) <= 0) {
+            return new BigDecimal("295.00");
+        } else {
+            return new BigDecimal("495.00");
+        }
     }
 
     public void setProcessingFee(BigDecimal processingFee) {
@@ -51,11 +55,18 @@ public class SalesContract extends Contract{
 
     @Override
     public BigDecimal getTotalPrice() {
-        return null;
+        return (getVehicleSold().getPrice().multiply(salesTax)).add(getRecordingFee()).add(getProcessingFee());
     }
 
     @Override
     public BigDecimal getMonthlyPayment() {
+        if (isFinanced) {
+            if (getVehicleSold().getPrice().compareTo(new BigDecimal("10000.00")) < 0) {
+                return null;
+            }
+        } else {
+            return new BigDecimal("0.00");
+        }
         return null;
     }
 }
